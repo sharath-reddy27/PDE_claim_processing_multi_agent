@@ -1,0 +1,24 @@
+SOP – PDE Error Code 935
+-----------------------
+ 
+Error Description:
+Claim has already been adjudicated and submitted previously to CMS.
+ 
+Objective:
+Determine whether claim needs reprocessing or reporting only.
+ 
+Resolution Steps:
+ 
+1. Identify claims flagged with error code 935.
+2. Compare Claim Received Date with Adjudication Timestamp.
+3. If adjudication date is newer than received date:
+   - Mark claim as already processed.
+4. Do NOT reprocess the claim.
+5. Include claim only in reporting output.
+6. Exclude claim from PDE resubmission file.
+7. Document decision for audit compliance.
+ 
+Output:
+- Claim excluded from reprocessing
+- Report generated for already processed claims
+- Audit record updated

@@ -1,0 +1,26 @@
+SOP – PDE Error Code 781
+-----------------------
+ 
+Error Description:
+Provider ID is missing or does not exist in the CMS master provider file.
+ 
+Objective:
+Identify missing or invalid Provider ID and correct the claim before CMS resubmission.
+ 
+Resolution Steps:
+ 
+1. Identify claims flagged with error code 781.
+2. Validate Provider ID against CMS master provider reference data.
+3. If Provider ID is missing:
+   - Retrieve correct Provider ID from RxClaim system.
+4. If Provider ID is invalid:
+   - Correct Provider ID using latest CMS provider mapping.
+5. Update claim record with corrected Provider ID.
+6. Mark claim as ready for reprocessing.
+7. Include claim in PDE resubmission flat file.
+8. Document correction in audit log.
+ 
+Output:
+- Updated claim record
+- Corrected PDE flat file
+- Claim ready for CMS resubmission

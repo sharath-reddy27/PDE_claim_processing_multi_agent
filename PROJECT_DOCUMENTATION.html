@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDE Claim Processing System – Project Documentation</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #c9d1d9;
+      line-height: 1.7;
+    }
+
+    /* ── Layout ───────────────────────────────────────────── */
+    .page-wrap { max-width: 1200px; margin: 0 auto; padding: 2rem 2rem 6rem; }
+
+    /* ── Cover ────────────────────────────────────────────── */
+    .cover {
+      background: linear-gradient(135deg, #0d1b2a 0%, #0a3060 60%, #0d1b2a 100%);
+      border: 1px solid #1e3a5f;
+      border-radius: 20px;
+      padding: 4rem 3rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+    .cover .pill {
+      display: inline-block;
+      background: rgba(79,195,247,0.15);
+      border: 1px solid #4fc3f7;
+      color: #4fc3f7;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .cover h1 { font-size: 2.6rem; color: #e0f0ff; font-weight: 700; margin-bottom: 0.6rem; }
+    .cover p  { color: #7fb3d3; font-size: 1rem; max-width: 600px; margin: 0 auto 2rem; }
+    .cover .meta {
+      display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+      font-size: 0.85rem; color: #5a8ab0;
+    }
+    .cover .meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ── Table of Contents ────────────────────────────────── */
+    .toc {
+      background: #141b2d;
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 2rem 2.5rem;
+      margin-bottom: 3rem;
+    }
+    .toc h2 { color: #4fc3f7; font-size: 1.1rem; margin-bottom: 1.2rem; }
+    .toc ol { padding-left: 1.4rem; }
+    .toc li { margin: 0.5rem 0; }
+    .toc a  { color: #7fb3d3; text-decoration: none; font-size: 0.93rem; }
+    .toc a:hover { color: #4fc3f7; text-decoration: underline; }
+
+    /* ── Section ──────────────────────────────────────────── */
+    .section {
+      background: #141b2d;
+      border: 1px solid #1e3a5f;
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1.6rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #1e3a5f;
+    }
+    .section-header .num {
+      background: linear-gradient(135deg, #0d3b66, #1565c0);
+      color: #e0f0ff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-header h2 { color: #e0f0ff; font-size: 1.35rem; font-weight: 700; }
+
+    /* ── Typography ───────────────────────────────────────── */
+    h3 { color: #4fc3f7; font-size: 1.05rem; margin: 1.6rem 0 0.7rem; }
+    h4 { color: #7fb3d3; font-size: 0.95rem; margin: 1.2rem 0 0.5rem; font-weight: 600; }
+    p  { color: #a8b8cc; margin-bottom: 0.9rem; font-size: 0.92rem; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 0.9rem; }
+    li { color: #a8b8cc; font-size: 0.92rem; margin: 0.35rem 0; }
+    strong { color: #c9d1d9; }
+    code {
+      background: #0d1117;
+      color: #79c0ff;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.82rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid #1e3a5f;
+    }
+
+    /* ── Code block ───────────────────────────────────────── */
+    pre {
+      background: #0d1117;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #79c0ff;
+      margin: 1rem 0;
+      line-height: 1.6;
+    }
+
+    /* ── Info / Note boxes ────────────────────────────────── */
+    .note {
+      background: rgba(79,195,247,0.07);
+      border-left: 4px solid #4fc3f7;
+      border-radius: 0 8px 8px 0;
+      padding: 0.9rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+      color: #b3d9f7;
+    }
+    .warn {
+      background: rgba(255,167,38,0.07);
+      border-left: 4px solid #ffa726;
+      border-radius: 0 8px 8px 0;
+      padding: 0.9rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+      color: #ffd580;
+    }
+
+    /* ── Tables ───────────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse; margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+    th {
+      background: #0d1b2a;
+      color: #4fc3f7;
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid #1e3a5f;
+      font-weight: 600;
+    }
+    td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid #1a2744;
+      color: #a8b8cc;
+      vertical-align: top;
+    }
+    tr:hover td { background: rgba(79,195,247,0.04); }
+
+    /* ── Badges ───────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+    .badge-blue   { background: #1a2744; color: #4fc3f7; border: 1px solid #4fc3f7; }
+    .badge-green  { background: #1a3a1a; color: #66bb6a; border: 1px solid #66bb6a; }
+    .badge-orange { background: #2d2200; color: #ffa726; border: 1px solid #ffa726; }
+    .badge-red    { background: #3a1a1a; color: #ef5350; border: 1px solid #ef5350; }
+    .badge-purple { background: #1a1a2d; color: #7c4dff; border: 1px solid #7c4dff; }
+    .badge-teal   { background: #0d2d2d; color: #26c6da; border: 1px solid #26c6da; }
+
+    /* ── DIAGRAM: Architecture Overview ──────────────────── */
+    .arch-diagram {
+      background: #0d1117;
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      font-family: 'Consolas', monospace;
+      font-size: 0.82rem;
+      overflow-x: auto;
+    }
+
+    /* ── DIAGRAM: Flow boxes ──────────────────────────────── */
+    .flow-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin: 2rem 0;
+    }
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
+    }
+    .flow-box {
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      min-width: 160px;
+      position: relative;
+    }
+    .flow-box .fb-icon { font-size: 1.4rem; display: block; margin-bottom: 0.3rem; }
+    .flow-box .fb-title { font-size: 0.85rem; font-weight: 700; }
+    .flow-box .fb-sub   { font-size: 0.72rem; margin-top: 0.2rem; opacity: 0.8; }
+
+    .fb-input       { background: #1a2d1a; border: 2px solid #66bb6a; color: #b7dfb7; }
+    .fb-orch        { background: #0d3060; border: 2px solid #4fc3f7; color: #b3d9f7; min-width: 280px; }
+    .fb-tools       { background: #1a1f35; border: 1px dashed #2a3f6f; color: #7fb3d3; padding: 1.2rem 1.5rem; border-radius: 12px; width: 100%; }
+    .fb-rx          { background: #1a2d1a; border: 2px solid #66bb6a; color: #b7dfb7; }
+    .fb-report      { background: #2d1a2d; border: 2px solid #ab47bc; color: #dbb3db; }
+    .fb-sn          { background: #1a1a2d; border: 2px solid #7c4dff; color: #d0b3ff; }
+    .fb-email       { background: #2d2200; border: 2px solid #ffa726; color: #ffd580; }
+    .fb-state       { background: #1a2744; border: 2px solid #4fc3f7; color: #b3d9f7; }
+    .fb-end         { background: #3a1a1a; border: 2px solid #ef5350; color: #f7b3b3; }
+    .fb-output      { background: #0d2d2d; border: 2px solid #26c6da; color: #80deea; min-width: 280px; }
+
+    .flow-arrow {
+      color: #4fc3f7;
+      font-size: 1.4rem;
+      text-align: center;
+      line-height: 1;
+      padding: 0.3rem 0;
+    }
+    .flow-arrow-h { color: #4fc3f7; font-size: 1.2rem; }
+
+    .flow-label {
+      font-size: 0.7rem;
+      color: #4a6080;
+      text-align: center;
+      font-style: italic;
+      padding: 0.1rem 0;
+    }
+
+    /* ── Decision tree diagram ────────────────────────────── */
+    .decision-tree {
+      background: #0d1117;
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+    }
+    .dt-row {
+      display: flex;
+      align-items: flex-start;
+      margin: 0.8rem 0;
+      gap: 1rem;
+    }
+    .dt-condition {
+      background: #1a2744;
+      border: 1px solid #2a3f5f;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.82rem;
+      color: #b3d9f7;
+      min-width: 200px;
+      white-space: nowrap;
+    }
+    .dt-arrow { color: #4a6080; font-size: 1.1rem; margin-top: 0.3rem; }
+    .dt-pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .dt-step {
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+    .dt-sep { color: #4a6080; font-size: 0.85rem; }
+
+    /* ── Agent detail card ────────────────────────────────── */
+    .agent-card {
+      border-radius: 12px;
+      padding: 1.4rem 1.8rem;
+      margin: 1rem 0;
+      border-left: 5px solid;
+    }
+    .ac-orchestrator { background: #0d1b2a; border-color: #4fc3f7; }
+    .ac-rx           { background: #1a2d1a; border-color: #66bb6a; }
+    .ac-report       { background: #2d1a2d; border-color: #ab47bc; }
+    .ac-servicenow   { background: #1a1a2d; border-color: #7c4dff; }
+    .ac-email        { background: #2d2200; border-color: #ffa726; }
+
+    .agent-card h3  { margin-top: 0; color: inherit; font-size: 1rem; }
+    .agent-card p   { font-size: 0.88rem; margin-bottom: 0.6rem; }
+    .agent-card ul  { margin-bottom: 0; }
+    .agent-card li  { font-size: 0.85rem; }
+
+    .tool-chip {
+      display: inline-block;
+      background: rgba(79,195,247,0.1);
+      border: 1px solid #1e3a5f;
+      color: #79c0ff;
+      font-size: 0.74rem;
+      font-family: 'Consolas', monospace;
+      padding: 0.15rem 0.6rem;
+      border-radius: 4px;
+      margin: 0.15rem;
+    }
+
+    /* ── State flow table ─────────────────────────────────── */
+    .state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .state-item {
+      background: #0d1117;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+    }
+    .state-item .si-key  { color: #79c0ff; font-family: monospace; font-size: 0.8rem; }
+    .state-item .si-type { color: #4a6080; font-size: 0.72rem; }
+    .state-item .si-desc { color: #7fb3d3; font-size: 0.78rem; margin-top: 0.2rem; }
+
+    /* ── Scenario cards ───────────────────────────────────── */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 700px) { .scenario-grid { grid-template-columns: 1fr; } }
+    .scenario-card {
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid;
+    }
+    .sc-1 { background: #0d2200; border-color: #66bb6a; }
+    .sc-2 { background: #1a1400; border-color: #ffa726; }
+    .sc-3 { background: #0a1a2d; border-color: #4fc3f7; }
+    .sc-4 { background: #2a0a0a; border-color: #ef5350; }
+    .scenario-card h4    { margin-top: 0; font-size: 0.9rem; }
+    .scenario-card .sc-label { font-size: 0.72rem; opacity: 0.7; }
+    .scenario-card .sc-pipeline { margin: 0.6rem 0 0; font-size: 0.78rem; }
+
+    /* ── Divider ──────────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid #1e3a5f; margin: 2rem 0; }
+
+    /* ── File tree ────────────────────────────────────────── */
+    .file-tree {
+      background: #0d1117;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      font-family: 'Consolas', monospace;
+      font-size: 0.82rem;
+      line-height: 1.9;
+    }
+    .ft-dir  { color: #4fc3f7; }
+    .ft-file { color: #79c0ff; }
+    .ft-desc { color: #4a6080; font-size: 0.75rem; }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #4a6080;
+      font-size: 0.8rem;
+      border-top: 1px solid #1e3a5f;
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- COVER                                                  -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="cover">
+    <div class="pill">Technical Documentation · v2.0</div>
+    <h1>💊 PDE Claim Processing System</h1>
+    <p>Dynamic Multi-Agent AI Pipeline for Medicare Part D PDE Claim Adjudication using LangGraph + Azure OpenAI GPT-4o</p>
+    <div class="meta">
+      <span>📅 March 3, 2026</span>
+      <span>🏢 Cognizant</span>
+      <span>🤖 LangGraph ReAct Agents</span>
+      <span>☁️ Azure OpenAI GPT-4o</span>
+      <span>🗄️ SQLite</span>
+      <span>🖥️ Streamlit UI</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- TABLE OF CONTENTS                                      -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="toc">
+    <h2>📋 Table of Contents</h2>
+    <ol>
+      <li><a href="#s1">Project Overview</a></li>
+      <li><a href="#s2">Technology Stack</a></li>
+      <li><a href="#s3">System Architecture Diagram</a></li>
+      <li><a href="#s4">Dynamic Orchestration Flow</a></li>
+      <li><a href="#s5">Agent-by-Agent Detailed Explanation</a></li>
+      <li><a href="#s6">Decision Logic &amp; Pipeline Routing</a></li>
+      <li><a href="#s7">All 4 Scenarios — Complete Walkthrough</a></li>
+      <li><a href="#s8">LangGraph State Schema</a></li>
+      <li><a href="#s9">Database Schema</a></li>
+      <li><a href="#s10">SOP (Standard Operating Procedures)</a></li>
+      <li><a href="#s11">Project File Structure</a></li>
+      <li><a href="#s12">How to Run the Project</a></li>
+      <li><a href="#s13">ReAct Pattern Explained</a></li>
+    </ol>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 1: PROJECT OVERVIEW                           -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="num">1</div>
+      <h2>Project Overview</h2>
+    </div>
+
+    <p>This system is a <strong>Dynamic Multi-Agent AI Pipeline</strong> built to automate the processing of <strong>PDE (Prescription Drug Event)</strong> claims for Medicare Part D. When CMS (Centers for Medicare &amp; Medicaid Services) returns error codes on PDE submissions, this system resolves them automatically using an LLM-driven orchestrator that reads official SOPs and dispatches the right specialist agents.</p>
+
+    <h3>🎯 What Problem Does It Solve?</h3>
+    <p>Medicare Part D plans submit PDE claims to CMS electronically. CMS returns error codes when claims fail validation. Manual resolution of these errors is time-consuming, error-prone, and requires staff to follow detailed Standard Operating Procedures. This system automates that entire workflow end-to-end.</p>
+
+    <h3>🔑 Key Features</h3>
+    <ul>
+      <li><strong>Dynamic orchestration</strong> — the LLM reads the SOP and decides which agents to call and in what order for each individual claim</li>
+      <li><strong>No hardcoded routing</strong> — all pipeline decisions are driven by GPT-4o reasoning, not static if/else logic</li>
+      <li><strong>Specialist agents as tools</strong> — each downstream agent (RX, Report, ServiceNow, Email) is a callable tool within the orchestrator's ReAct loop</li>
+      <li><strong>Two error codes handled</strong> — Error 781 (missing/invalid provider) and Error 935 (already adjudicated)</li>
+      <li><strong>Full audit trail</strong> — every agent's reasoning trace is captured and displayed in the Streamlit UI</li>
+      <li><strong>Streamlit dashboard</strong> — real-time monitoring, claim processing, and database explorer</li>
+    </ul>
+
+    <h3>📌 Supported Error Codes</h3>
+    <table>
+      <thead><tr><th>Error Code</th><th>Description</th><th>Business Rule</th><th>Possible Outcomes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-orange">781</span></td>
+          <td>Provider ID missing or invalid</td>
+          <td>Look up CMS provider mapping table. If found → correct &amp; reprocess. If not found → reject.</td>
+          <td><span class="badge badge-green">REPROCESS</span> or <span class="badge badge-red">REJECT</span></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-teal">935</span></td>
+          <td>Claim already adjudicated</td>
+          <td>Compare received_date vs adjudication_ts. If equal → duplicate, reprocess. If adj newer → already done, report only.</td>
+          <td><span class="badge badge-green">REPROCESS</span> or <span class="badge badge-blue">ALREADY_PROCESSED</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 2: TECHNOLOGY STACK                           -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="num">2</div>
+      <h2>Technology Stack</h2>
+    </div>
+
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LLM</strong></td><td>Azure OpenAI GPT-4o</td><td>Powers all ReAct agent reasoning and decision-making</td></tr>
+        <tr><td><strong>Agent Framework</strong></td><td>LangChain <code>create_agent</code> (ReAct)</td><td>Builds ReAct agents with tool-calling loop for each specialist</td></tr>
+        <tr><td><strong>Orchestration</strong></td><td>LangGraph <code>StateGraph</code></td><td>Manages the single-node dynamic pipeline and typed state</td></tr>
+        <tr><td><strong>Tool Binding</strong></td><td>LangChain <code>@tool</code> decorator</td><td>Exposes DB functions and specialist agents as callable tools</td></tr>
+        <tr><td><strong>Database</strong></td><td>SQLite</td><td>Stores claims, provider mappings, and generated reports</td></tr>
+        <tr><td><strong>UI</strong></td><td>Streamlit</td><td>Dashboard for processing claims, viewing traces, and exploring DB</td></tr>
+        <tr><td><strong>Config</strong></td><td>python-dotenv</td><td>Loads Azure OpenAI credentials from <code>.env</code> file</td></tr>
+        <tr><td><strong>Language</strong></td><td>Python 3.13</td><td>All application code</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 3: SYSTEM ARCHITECTURE DIAGRAM                -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="num">3</div>
+      <h2>System Architecture Diagram</h2>
+    </div>
+
+    <p>The system is organised into three layers: the <strong>UI/Entry Layer</strong>, the <strong>Orchestration Layer</strong> (LangGraph + dynamic orchestrator), and the <strong>Specialist Agents Layer</strong>. All agents share a common typed state object.</p>
+
+    <!-- Architecture ASCII diagram -->
+    <div class="arch-diagram">
+<pre style="background:transparent; border:none; padding:0; color:#7fb3d3; font-size:0.82rem; line-height:1.8">
+ ┌─────────────────────────────────────────────────────────────────────────────────────┐
+ │                              UI / ENTRY LAYER                                       │
+ │                                                                                     │
+ │   ┌───────────────────┐        ┌──────────────────────┐      ┌──────────────────┐   │
+ │   │  Streamlit App    │        │  orchestrator_test.py│      │   run.py         │   │
+ │   │  (app.py)         │        │  (4-scenario tests)  │      │   (CLI runner)   │   │
+ │   └────────┬──────────┘        └──────────┬───────────┘      └────────┬─────────┘   │
+ └────────────┼──────────────────────────────┼──────────────────────────┼─────────────┘
+              │                              │                           │
+              └──────────────────────────────┴───────────────────────────┘
+                                             │  { claim_id, error_code }
+                                             ▼
+ ┌─────────────────────────────────────────────────────────────────────────────────────┐
+ │                         LANGGRAPH PIPELINE  (graph.py)                              │
+ │                                                                                     │
+ │    StateGraph(ClaimState)                                                           │
+ │                                                                                     │
+ │    ┌────────────────────────────────────────────────────────────────────────────┐   │
+ │    │  Node: ORCHESTRATOR  (orchestrator_agent)                                  │   │
+ │    │                                                                            │   │
+ │    │  ① tool_load_sop(error_code)       ← reads SOP file from /sop/            │   │
+ │    │  ② tool_get_claim(claim_id)        ← fetches claim from rx_claims.db      │   │
+ │    │  ③ tool_run_rx_agent(...)          ← calls rx_claim_agent.py              │   │
+ │    │  ④ tool_run_report_agent(...)      ← calls report_builder_agent.py        │   │
+ │    │  ⑤ tool_run_servicenow_agent(...)  ← calls servicenow_agent.py            │   │
+ │    │  ⑥ tool_run_email_agent(...)       ← calls email_agent.py                 │   │
+ │    │                                                                            │   │
+ │    │  GPT-4o decides which tools to call based on SOP + claim data              │   │
+ │    └────────────────────────────────────────────────────────────────────────────┘   │
+ │                                         │                                           │
+ │                                        END                                          │
+ └─────────────────────────────────────────────────────────────────────────────────────┘
+              │ result (full ClaimState)
+              ▼
+ ┌─────────────────────────────────────────────────────────────────────────────────────┐
+ │                           DATA / OUTPUT LAYER                                       │
+ │                                                                                     │
+ │   ┌────────────────┐   ┌────────────────┐   ┌───────────────────┐                  │
+ │   │  rx_claims.db  │   │  reports.db    │   │  /output/RCL_*.csv│                  │
+ │   │  - claims      │   │  - reports     │   │  (Reprocess List) │                  │
+ │   │  - provider_   │   │  - decisions   │   │                   │                  │
+ │   │    mapping     │   │  - audit log   │   │                   │                  │
+ │   └────────────────┘   └────────────────┘   └───────────────────┘                  │
+ └─────────────────────────────────────────────────────────────────────────────────────┘
+</pre>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 4: DYNAMIC ORCHESTRATION FLOW                 -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="num">4</div>
+      <h2>Dynamic Orchestration Flow</h2>
+    </div>
+
+    <p>Unlike a traditional static pipeline where routing is hardcoded, this system uses a <strong>Dynamic ReAct Orchestrator</strong>. The LLM reads the SOP for each error code, inspects the claim, and <em>decides at runtime</em> which specialist agents to invoke and in what sequence.</p>
+
+    <!-- Visual flow -->
+    <div class="flow-container">
+
+      <div class="flow-row">
+        <div class="flow-box fb-input">
+          <span class="fb-icon">📥</span>
+          <div class="fb-title">INPUT</div>
+          <div class="fb-sub">{ claim_id, error_code }</div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">↓</div>
+
+      <div class="flow-row">
+        <div class="flow-box fb-orch">
+          <span class="fb-icon">🧠</span>
+          <div class="fb-title">DYNAMIC ORCHESTRATOR</div>
+          <div class="fb-sub">LangGraph Node · GPT-4o ReAct Loop</div>
+        </div>
+      </div>
+
+      <div style="width:100%; max-width:700px; margin:0 auto;">
+        <div class="flow-arrow" style="text-align:left; padding-left:80px">↙</div>
+      </div>
+
+      <!-- Tools inside orchestrator -->
+      <div style="width:100%; max-width:700px;">
+        <div class="fb-tools">
+          <div style="color:#4fc3f7; font-size:0.82rem; font-weight:700; margin-bottom:1rem; text-align:center">⚙️ Orchestrator's Tool Belt (called sequentially by LLM decision)</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem;">
+            <div style="background:#0d1117; border:1px solid #1e3a5f; border-radius:8px; padding:0.6rem; text-align:center;">
+              <div style="color:#4fc3f7; font-size:0.72rem; font-weight:700">① SOP TOOL</div>
+              <div style="color:#5a8ab0; font-size:0.7rem">tool_load_sop()</div>
+              <div style="color:#4a6080; font-size:0.68rem; margin-top:0.2rem">reads business rules</div>
+            </div>
+            <div style="background:#0d1117; border:1px solid #1e3a5f; border-radius:8px; padding:0.6rem; text-align:center;">
+              <div style="color:#4fc3f7; font-size:0.72rem; font-weight:700">② CLAIM TOOL</div>
+              <div style="color:#5a8ab0; font-size:0.7rem">tool_get_claim()</div>
+              <div style="color:#4a6080; font-size:0.68rem; margin-top:0.2rem">fetches claim from DB</div>
+            </div>
+            <div style="background:#1a2d1a; border:1px solid #2a5f2a; border-radius:8px; padding:0.6rem; text-align:center;">
+              <div style="color:#66bb6a; font-size:0.72rem; font-weight:700">③ RX AGENT</div>
+              <div style="color:#5a8ab0; font-size:0.7rem">tool_run_rx_agent()</div>
+              <div style="color:#4a6080; font-size:0.68rem; margin-top:0.2rem">adjudicates claim</div>
+            </div>
+            <div style="background:#2d1a2d; border:1px solid #5a2a5a; border-radius:8px; padding:0.6rem; text-align:center;">
+              <div style="color:#ab47bc; font-size:0.72rem; font-weight:700">④ REPORT AGENT</div>
+              <div style="color:#5a8ab0; font-size:0.7rem">tool_run_report_agent()</div>
+              <div style="color:#4a6080; font-size:0.68rem; margin-top:0.2rem">builds RCL / compliance</div>
+            </div>
+            <div style="background:#1a1a2d; border:1px solid #3a2a6a; border-radius:8px; padding:0.6rem; text-align:center;">
+              <div style="color:#7c4dff; font-size:0.72rem; font-weight:700">⑤ SERVICENOW</div>
+              <div style="color:#5a8ab0; font-size:0.7rem">tool_run_servicenow_agent()</div>
+              <div style="color:#4a6080; font-size:0.68rem; margin-top:0.2rem">raises incident ticket</div>
+            </div>
+            <div style="background:#2d2200; border:1px solid #5a4400; border-radius:8px; padding:0.6rem; text-align:center;">
+              <div style="color:#ffa726; font-size:0.72rem; font-weight:700">⑥ EMAIL AGENT</div>
+              <div style="color:#5a8ab0; font-size:0.7rem">tool_run_email_agent()</div>
+              <div style="color:#4a6080; font-size:0.68rem; margin-top:0.2rem">sends notification</div>
+            </div>
+          </div>
+          <div style="color:#4a6080; font-size:0.72rem; text-align:center; margin-top:0.8rem; font-style:italic">
+            ↑ GPT-4o decides which of tools ③–⑥ to call based on SOP + decision ↑
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">↓</div>
+
+      <div class="flow-row">
+        <div class="flow-box fb-output">
+          <span class="fb-icon">📊</span>
+          <div class="fb-title">FINAL STATE OUTPUT</div>
+          <div class="fb-sub">decision · agents_invoked · report · rcl_file · ticket · email · reasoning · all traces</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note">
+      <strong>🧠 Why is this "dynamic"?</strong> The orchestrator does not have hardcoded if/else routing. GPT-4o reads the SOP text and the claim data, then reasons step-by-step about which agents are needed. If it decides a REJECT, it stops after the RX agent without calling report, ServiceNow, or email — purely from reading the SOP rule.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 5: AGENTS DETAILED EXPLANATION               -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="num">5</div>
+      <h2>Agent-by-Agent Detailed Explanation</h2>
+    </div>
+
+    <p>Each agent is a <strong>LangChain ReAct agent</strong> (<code>create_agent</code>) powered by GPT-4o. They each have a focused system prompt, a set of tools, and return structured JSON output. The orchestrator calls them as tool wrappers.</p>
+
+    <!-- Orchestrator Agent -->
+    <div class="agent-card ac-orchestrator">
+      <h3>🧠 1. Dynamic Orchestrator Agent &nbsp;<span class="badge badge-blue">Supervisor</span></h3>
+      <p><strong>File:</strong> <code>agents/orchestrator.py</code> &nbsp;·&nbsp; <strong>LangGraph Node:</strong> <code>ORCHESTRATOR</code></p>
+      <p>The master controller. Runs the <strong>entire pipeline</strong> in one ReAct loop. It reads the SOP, fetches the claim, then decides which specialist agents to invoke as tools — collecting all results and writing them into the shared state.</p>
+      <p><strong>Tools available:</strong></p>
+      <div>
+        <span class="tool-chip">tool_load_sop</span>
+        <span class="tool-chip">tool_get_claim</span>
+        <span class="tool-chip">tool_run_rx_agent</span>
+        <span class="tool-chip">tool_run_report_agent</span>
+        <span class="tool-chip">tool_run_servicenow_agent</span>
+        <span class="tool-chip">tool_run_email_agent</span>
+      </div>
+      <p style="margin-top:0.8rem"><strong>Shared Context (<code>_ctx</code>):</strong> A module-level dict that all tool wrappers read/write so intermediate results (decision, report, rcl_file) flow between agent calls without re-fetching from DB.</p>
+      <p><strong>Output written to state:</strong> <code>decision</code>, <code>agents_invoked</code>, <code>reasoning</code>, <code>report</code>, <code>rcl_file</code>, <code>servicenow_ticket</code>, <code>email_status</code>, plus all 4 sub-agent trace strings.</p>
+    </div>
+
+    <!-- RX Claim Agent -->
+    <div class="agent-card ac-rx">
+      <h3>💊 2. RX Claim Agent &nbsp;<span class="badge badge-green">Specialist</span></h3>
+      <p><strong>File:</strong> <code>agents/rx_claim_agent.py</code> &nbsp;·&nbsp; <strong>Handles:</strong> Error 781 and Error 935</p>
+      <p>The adjudication specialist. Handles <strong>both error codes</strong> with different logic paths determined by the system prompt.</p>
+      <ul>
+        <li><strong>Error 781 path:</strong> fetches claim → looks up provider mapping → updates provider_id in DB → decides REPROCESS or REJECT</li>
+        <li><strong>Error 935 path:</strong> fetches claim → compares received_date vs adjudication_ts via date tool → updates status → decides REPROCESS (equal) or ALREADY_PROCESSED (adj newer)</li>
+      </ul>
+      <p><strong>Tools available:</strong></p>
+      <div>
+        <span class="tool-chip">tool_get_claim</span>
+        <span class="tool-chip">tool_get_provider_mapping</span>
+        <span class="tool-chip">tool_update_claim_provider_id</span>
+        <span class="tool-chip">tool_update_claim_status</span>
+        <span class="tool-chip">tool_compare_claim_dates</span>
+      </div>
+      <p style="margin-top:0.8rem"><strong>Returns JSON:</strong> <code>decision</code>, <code>provider_resolved</code>, <code>new_provider_id</code>, <code>received_date</code>, <code>adjudication_ts</code>, <code>reason</code></p>
+    </div>
+
+    <!-- Report Builder Agent -->
+    <div class="agent-card ac-report">
+      <h3>📋 3. Report Builder Agent &nbsp;<span class="badge badge-purple">Specialist</span></h3>
+      <p><strong>File:</strong> <code>agents/report_builder_agent.py</code> &nbsp;·&nbsp; <strong>Invoked when:</strong> decision ≠ REJECT</p>
+      <p>Handles two distinct reporting scenarios based on the decision value:</p>
+      <ul>
+        <li><strong>Scenario A (REPROCESS):</strong> fetches claim → gets all READY_FOR_REPROCESS claims → generates RCL CSV file → saves audit report to DB</li>
+        <li><strong>Scenario B (ALREADY_PROCESSED):</strong> fetches claim → saves compliance report to DB (no RCL file generated)</li>
+      </ul>
+      <p><strong>Tools available:</strong></p>
+      <div>
+        <span class="tool-chip">tool_get_claim</span>
+        <span class="tool-chip">tool_insert_report</span>
+        <span class="tool-chip">tool_generate_rcl_file</span>
+        <span class="tool-chip">tool_get_reprocess_claims_summary</span>
+      </div>
+      <p style="margin-top:0.8rem"><strong>Returns JSON:</strong> <code>report</code>, <code>decision</code>, <code>rcl_file</code> (path or null)</p>
+    </div>
+
+    <!-- ServiceNow Agent -->
+    <div class="agent-card ac-servicenow">
+      <h3>🎫 4. ServiceNow Agent &nbsp;<span class="badge badge-purple">Specialist</span></h3>
+      <p><strong>File:</strong> <code>agents/servicenow_agent.py</code> &nbsp;·&nbsp; <strong>Invoked when:</strong> decision = REPROCESS only</p>
+      <p>Creates a simulated ServiceNow incident ticket for the PDE reprocessing team. In production this would call the ServiceNow Table REST API.</p>
+      <ul>
+        <li>Gets all READY_FOR_REPROCESS claims from DB</li>
+        <li>Creates ticket with: short description, full description, priority (2-High if &gt;5 claims, else 3-Medium), category = "PDE Reprocessing", affected_claims list</li>
+        <li>Assigns to "PDE Operations Team / Medicare Part D Processing" group</li>
+      </ul>
+      <p><strong>Tools available:</strong></p>
+      <div>
+        <span class="tool-chip">tool_get_reprocess_claims_summary</span>
+        <span class="tool-chip">tool_create_servicenow_ticket</span>
+      </div>
+      <p style="margin-top:0.8rem"><strong>Returns JSON:</strong> <code>ticket_number</code> (e.g. INC20260303124054), <code>ticket_summary</code>, <code>claims_count</code></p>
+    </div>
+
+    <!-- Email Agent -->
+    <div class="agent-card ac-email">
+      <h3>📧 5. Email Agent &nbsp;<span class="badge badge-orange">Specialist</span></h3>
+      <p><strong>File:</strong> <code>agents/email_agent.py</code> &nbsp;·&nbsp; <strong>Invoked when:</strong> decision ≠ REJECT</p>
+      <p>Composes and (simulated) sends a professional notification email to the compliance team. In production this would connect to SMTP / SendGrid / Azure Communication Services.</p>
+      <ul>
+        <li>Fetches claim to confirm final status</li>
+        <li>Composes a 3–5 sentence professional email including claim ID, error code, decision, and key details</li>
+        <li>Sends to <code>compliance-team@healthplan.com</code></li>
+      </ul>
+      <p><strong>Tools available:</strong></p>
+      <div>
+        <span class="tool-chip">tool_get_claim</span>
+        <span class="tool-chip">tool_send_email</span>
+      </div>
+      <p style="margin-top:0.8rem"><strong>Returns JSON:</strong> <code>email_status</code> (SENT), <code>email_subject</code>, <code>email_summary</code></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 6: DECISION LOGIC & ROUTING                  -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="num">6</div>
+      <h2>Decision Logic &amp; Pipeline Routing</h2>
+    </div>
+
+    <p>The routing is <strong>fully LLM-driven</strong> — GPT-4o reads the loaded SOP and uses it to decide the pipeline. The decision tree below shows all possible paths:</p>
+
+    <div class="decision-tree">
+      <div style="color:#4fc3f7; font-size:0.88rem; font-weight:700; margin-bottom:1.2rem; text-align:center">
+        🌳 DYNAMIC ROUTING DECISION TREE
+      </div>
+
+      <div style="background:#0a1628; border-radius:10px; padding:1rem; margin-bottom:1rem; text-align:center">
+        <div style="color:#7fb3d3; font-size:0.82rem">INPUT: { claim_id, error_code }</div>
+        <div style="color:#4fc3f7; font-size:0.75rem; margin-top:0.3rem">↓ Orchestrator reads SOP + fetches claim ↓</div>
+      </div>
+
+      <!-- 781 branch -->
+      <div style="display:flex; gap:1rem; margin-bottom:0.5rem; align-items:flex-start">
+        <div style="background:#2d1600; border:1px solid #ffa726; border-radius:8px; padding:0.5rem 1rem; font-size:0.82rem; color:#ffd580; white-space:nowrap">error_code = 781</div>
+        <div style="color:#4a6080; margin-top:0.4rem">→</div>
+        <div style="flex:1">
+          <div style="display:flex; gap:0.8rem; margin-bottom:0.5rem; align-items:center">
+            <div style="background:#1a2d1a; border:1px solid #2a5f2a; border-radius:6px; padding:0.4rem 0.8rem; font-size:0.78rem; color:#b7dfb7; white-space:nowrap">provider mapping found</div>
+            <div style="color:#4a6080">→ decision: REPROCESS →</div>
+            <div class="dt-pipeline">
+              <span class="dt-step" style="background:#1a2d1a; color:#66bb6a; border:1px solid #2a5f2a">RX</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#2d1a2d; color:#ab47bc; border:1px solid #5a2a5a">REPORT</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#1a1a2d; color:#7c4dff; border:1px solid #3a2a6a">SERVICENOW</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#2d2200; color:#ffa726; border:1px solid #5a4400">EMAIL</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:0.8rem; align-items:center">
+            <div style="background:#3a1a1a; border:1px solid #5a2a2a; border-radius:6px; padding:0.4rem 0.8rem; font-size:0.78rem; color:#f7b3b3; white-space:nowrap">no mapping found</div>
+            <div style="color:#4a6080">→ decision: REJECT →</div>
+            <div class="dt-pipeline">
+              <span class="dt-step" style="background:#1a2d1a; color:#66bb6a; border:1px solid #2a5f2a">RX</span>
+              <span class="dt-sep" style="color:#ef5350; font-weight:700"> ⛔ STOP</span>
+              <span style="font-size:0.72rem; color:#4a6080; margin-left:0.5rem">(no report, no email)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid #1e3a5f; margin:1rem 0"></div>
+
+      <!-- 935 branch -->
+      <div style="display:flex; gap:1rem; align-items:flex-start">
+        <div style="background:#0d2d2d; border:1px solid #26c6da; border-radius:8px; padding:0.5rem 1rem; font-size:0.82rem; color:#80deea; white-space:nowrap">error_code = 935</div>
+        <div style="color:#4a6080; margin-top:0.4rem">→</div>
+        <div style="flex:1">
+          <div style="display:flex; gap:0.8rem; margin-bottom:0.5rem; align-items:center">
+            <div style="background:#1a2d1a; border:1px solid #2a5f2a; border-radius:6px; padding:0.4rem 0.8rem; font-size:0.78rem; color:#b7dfb7; white-space:nowrap">dates EQUAL</div>
+            <div style="color:#4a6080">→ decision: REPROCESS →</div>
+            <div class="dt-pipeline">
+              <span class="dt-step" style="background:#1a2d1a; color:#66bb6a; border:1px solid #2a5f2a">RX</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#2d1a2d; color:#ab47bc; border:1px solid #5a2a5a">REPORT</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#1a1a2d; color:#7c4dff; border:1px solid #3a2a6a">SERVICENOW</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#2d2200; color:#ffa726; border:1px solid #5a4400">EMAIL</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:0.8rem; align-items:center">
+            <div style="background:#0a1628; border:1px solid #1e3a5f; border-radius:6px; padding:0.4rem 0.8rem; font-size:0.78rem; color:#b3d9f7; white-space:nowrap">adj_ts NEWER</div>
+            <div style="color:#4a6080">→ decision: ALREADY_PROCESSED →</div>
+            <div class="dt-pipeline">
+              <span class="dt-step" style="background:#1a2d1a; color:#66bb6a; border:1px solid #2a5f2a">RX</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#2d1a2d; color:#ab47bc; border:1px solid #5a2a5a">REPORT</span>
+              <span class="dt-sep">→</span>
+              <span style="font-size:0.72rem; color:#7c4dff; text-decoration:line-through; opacity:0.4">SERVICENOW</span>
+              <span class="dt-sep">→</span>
+              <span class="dt-step" style="background:#2d2200; color:#ffa726; border:1px solid #5a4400">EMAIL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>📐 Routing Summary Table</h3>
+    <table>
+      <thead><tr><th>Error Code</th><th>Condition</th><th>Decision</th><th>RX</th><th>REPORT</th><th>SERVICENOW</th><th>EMAIL</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>781</td><td>Provider mapping found</td>
+          <td><span class="badge badge-green">REPROCESS</span></td>
+          <td>✅</td><td>✅ (RCL file)</td><td>✅ (ticket)</td><td>✅</td>
+        </tr>
+        <tr>
+          <td>781</td><td>No mapping found (e.g. P999)</td>
+          <td><span class="badge badge-red">REJECT</span></td>
+          <td>✅</td><td>⛔ skipped</td><td>⛔ skipped</td><td>⛔ skipped</td>
+        </tr>
+        <tr>
+          <td>935</td><td>received_date == adjudication_ts</td>
+          <td><span class="badge badge-green">REPROCESS</span></td>
+          <td>✅</td><td>✅ (RCL file)</td><td>✅ (ticket)</td><td>✅</td>
+        </tr>
+        <tr>
+          <td>935</td><td>adjudication_ts &gt; received_date</td>
+          <td><span class="badge badge-blue">ALREADY_PROCESSED</span></td>
+          <td>✅</td><td>✅ (compliance)</td><td>⛔ skipped</td><td>✅</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 7: ALL 4 SCENARIOS                           -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="num">7</div>
+      <h2>All 4 Scenarios — Complete Walkthrough</h2>
+    </div>
+
+    <div class="scenario-grid">
+      <div class="scenario-card sc-1">
+        <h4 style="color:#66bb6a">✅ Scenario 1 — Error 781: Missing Provider → REPROCESS</h4>
+        <div class="sc-label">Claim: C0009 | provider_id = '' (blank)</div>
+        <div class="sc-pipeline">
+          <ol style="padding-left:1.2rem; font-size:0.82rem; color:#b7dfb7; line-height:1.9">
+            <li>Orchestrator loads SOP 781: <em>"retrieve correct provider ID from RxClaim"</em></li>
+            <li>Fetches claim C0009 — provider_id is blank</li>
+            <li>Calls RX Agent → looks up mapping for <code>''</code> → finds P002 (Sunrise Pharmacy)</li>
+            <li>RX Agent updates DB: provider_id = P002, status = READY_FOR_REPROCESS</li>
+            <li>Decision = <strong>REPROCESS</strong></li>
+            <li>Calls Report Agent → generates RCL CSV file with all reprocess claims</li>
+            <li>Calls ServiceNow Agent → raises incident ticket (priority 2-High)</li>
+            <li>Calls Email Agent → sends notification to compliance-team@healthplan.com</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="scenario-card sc-2">
+        <h4 style="color:#ffa726">🔄 Scenario 2 — Error 935: Dates Equal → REPROCESS</h4>
+        <div class="sc-label">Claim: C0010 | received=2025-01-02, adj_ts=2025-01-02</div>
+        <div class="sc-pipeline">
+          <ol style="padding-left:1.2rem; font-size:0.82rem; color:#ffd580; line-height:1.9">
+            <li>Orchestrator loads SOP 935: <em>"compare claim received date with adjudication timestamp"</em></li>
+            <li>Fetches claim C0010 — dates are equal</li>
+            <li>Calls RX Agent → runs date comparison tool → dates EQUAL → potential duplicate</li>
+            <li>RX Agent updates status = READY_FOR_REPROCESS</li>
+            <li>Decision = <strong>REPROCESS</strong></li>
+            <li>Calls Report Agent → generates RCL CSV</li>
+            <li>Calls ServiceNow Agent → raises ticket</li>
+            <li>Calls Email Agent → sends notification</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="scenario-card sc-3">
+        <h4 style="color:#4fc3f7">ℹ️ Scenario 3 — Error 935: Adj Newer → ALREADY_PROCESSED</h4>
+        <div class="sc-label">Claim: C0006 | received=2024-12-15, adj_ts=2025-01-02</div>
+        <div class="sc-pipeline">
+          <ol style="padding-left:1.2rem; font-size:0.82rem; color:#b3d9f7; line-height:1.9">
+            <li>Orchestrator loads SOP 935: <em>"if adjudication newer → mark as already processed"</em></li>
+            <li>Fetches claim C0006 — adj_ts is 18 days after received_date</li>
+            <li>Calls RX Agent → date comparison: adj NEWER → no reprocess needed</li>
+            <li>RX Agent updates status = ALREADY_PROCESSED</li>
+            <li>Decision = <strong>ALREADY_PROCESSED</strong></li>
+            <li>Calls Report Agent → saves compliance report (no RCL file)</li>
+            <li>⛔ ServiceNow Agent is <strong>NOT called</strong> (SOP says: exclude from resubmission)</li>
+            <li>Calls Email Agent → sends notification</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="scenario-card sc-4">
+        <h4 style="color:#ef5350">❌ Scenario 4 — Error 781: Invalid Provider → REJECT</h4>
+        <div class="sc-label">Claim: TEST-REJECT-001 | provider_id = P999 (no mapping)</div>
+        <div class="sc-pipeline">
+          <ol style="padding-left:1.2rem; font-size:0.82rem; color:#f7b3b3; line-height:1.9">
+            <li>Orchestrator loads SOP 781</li>
+            <li>Fetches claim TEST-REJECT-001 — provider_id = P999</li>
+            <li>Calls RX Agent → looks up mapping for P999 → <strong>no mapping found</strong></li>
+            <li>RX Agent updates status = REJECTED</li>
+            <li>Decision = <strong>REJECT</strong></li>
+            <li>⛔ Report Agent is <strong>NOT called</strong></li>
+            <li>⛔ ServiceNow Agent is <strong>NOT called</strong></li>
+            <li>⛔ Email Agent is <strong>NOT called</strong></li>
+            <li>Pipeline ends — only RX_AGENT was invoked</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 8: LANGGRAPH STATE SCHEMA                    -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="num">8</div>
+      <h2>LangGraph State Schema</h2>
+    </div>
+
+    <p>The entire pipeline communicates through a single typed <code>ClaimState</code> TypedDict defined in <code>graph.py</code>. All agents read from and write to this shared state.</p>
+
+    <div class="state-grid">
+      <div class="state-item"><div class="si-key">claim_id</div><div class="si-type">str · INPUT</div><div class="si-desc">PDE claim identifier (e.g. C0009)</div></div>
+      <div class="state-item"><div class="si-key">error_code</div><div class="si-type">str · INPUT</div><div class="si-desc">781 or 935</div></div>
+      <div class="state-item"><div class="si-key">sop_text</div><div class="si-type">str · Orchestrator</div><div class="si-desc">Full SOP document text loaded from file</div></div>
+      <div class="state-item"><div class="si-key">reasoning</div><div class="si-type">str · Orchestrator</div><div class="si-desc">LLM chain-of-thought explanation</div></div>
+      <div class="state-item"><div class="si-key">agents_invoked</div><div class="si-type">List[str] · Orchestrator</div><div class="si-desc">e.g. ["RX_AGENT", "REPORT", "EMAIL"]</div></div>
+      <div class="state-item"><div class="si-key">decision</div><div class="si-type">str · RX Agent</div><div class="si-desc">REPROCESS | REJECT | ALREADY_PROCESSED</div></div>
+      <div class="state-item"><div class="si-key">reason</div><div class="si-type">str · RX Agent</div><div class="si-desc">Detailed explanation of the decision</div></div>
+      <div class="state-item"><div class="si-key">provider_id</div><div class="si-type">str · RX Agent</div><div class="si-desc">Resolved or original provider ID</div></div>
+      <div class="state-item"><div class="si-key">resolved_provider</div><div class="si-type">dict | None · RX Agent</div><div class="si-desc">Full mapping record {new_provider_id, name, npi}</div></div>
+      <div class="state-item"><div class="si-key">received_date</div><div class="si-type">str · RX Agent</div><div class="si-desc">Claim received date (935 only)</div></div>
+      <div class="state-item"><div class="si-key">adjudication_ts</div><div class="si-type">str · RX Agent</div><div class="si-desc">Adjudication timestamp (935 only)</div></div>
+      <div class="state-item"><div class="si-key">report</div><div class="si-type">str · Report Agent</div><div class="si-desc">Compliance report text saved to DB</div></div>
+      <div class="state-item"><div class="si-key">rcl_file</div><div class="si-type">str · Report Agent</div><div class="si-desc">Path to RCL CSV file (REPROCESS only)</div></div>
+      <div class="state-item"><div class="si-key">servicenow_ticket</div><div class="si-type">str · ServiceNow</div><div class="si-desc">Ticket number (e.g. INC20260303124054)</div></div>
+      <div class="state-item"><div class="si-key">servicenow_summary</div><div class="si-type">str · ServiceNow</div><div class="si-desc">One-line summary of the ticket</div></div>
+      <div class="state-item"><div class="si-key">claims_count</div><div class="si-type">int · ServiceNow</div><div class="si-desc">Number of claims in the ticket</div></div>
+      <div class="state-item"><div class="si-key">email_status</div><div class="si-type">str · Email</div><div class="si-desc">SENT | SKIPPED</div></div>
+      <div class="state-item"><div class="si-key">email_summary</div><div class="si-type">str · Email</div><div class="si-desc">One-line summary of email sent</div></div>
+      <div class="state-item"><div class="si-key">orchestrator_trace</div><div class="si-type">str · UI</div><div class="si-desc">Full ReAct trace of orchestrator loop</div></div>
+      <div class="state-item"><div class="si-key">rx_agent_trace</div><div class="si-type">str · UI</div><div class="si-desc">Full ReAct trace of RX agent loop</div></div>
+      <div class="state-item"><div class="si-key">report_agent_trace</div><div class="si-type">str · UI</div><div class="si-desc">Full ReAct trace of report builder loop</div></div>
+      <div class="state-item"><div class="si-key">servicenow_trace</div><div class="si-type">str · UI</div><div class="si-desc">Full ReAct trace of ServiceNow loop</div></div>
+      <div class="state-item"><div class="si-key">email_agent_trace</div><div class="si-type">str · UI</div><div class="si-desc">Full ReAct trace of email agent loop</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 9: DATABASE SCHEMA                           -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <div class="num">9</div>
+      <h2>Database Schema</h2>
+    </div>
+
+    <p>Two SQLite databases are used: <code>db/rx_claims.db</code> for claims and provider data, and <code>db/reports.db</code> for audit reports.</p>
+
+    <h3>📋 rx_claims.db</h3>
+
+    <h4>Table: <code>claims</code></h4>
+    <table>
+      <thead><tr><th>Column</th><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><code>claim_id</code></td><td>TEXT (PK)</td><td>Unique PDE claim identifier</td><td>C0009</td></tr>
+        <tr><td><code>error_code</code></td><td>TEXT</td><td>CMS error code returned on submission</td><td>781 or 935</td></tr>
+        <tr><td><code>provider_id</code></td><td>TEXT</td><td>Pharmacy / provider NPI reference</td><td>P002 or '' (missing)</td></tr>
+        <tr><td><code>adjudication_ts</code></td><td>TEXT</td><td>When the claim was adjudicated by CMS</td><td>2025-01-02</td></tr>
+        <tr><td><code>status</code></td><td>TEXT</td><td>Current processing status</td><td>NEW | READY_FOR_REPROCESS | REJECTED | ALREADY_PROCESSED</td></tr>
+        <tr><td><code>received_date</code></td><td>TEXT</td><td>When the claim was received (for 935 date comparison)</td><td>2024-12-15</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Table: <code>provider_mapping</code></h4>
+    <table>
+      <thead><tr><th>Column</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>old_provider_id</code></td><td>The invalid or missing provider ID (blank string '' for missing)</td></tr>
+        <tr><td><code>new_provider_id</code></td><td>The CMS-validated replacement provider ID</td></tr>
+        <tr><td><code>provider_name</code></td><td>Human-readable pharmacy/provider name</td></tr>
+        <tr><td><code>npi</code></td><td>National Provider Identifier (10-digit)</td></tr>
+        <tr><td><code>is_active</code></td><td>1 = active mapping, 0 = merged/legacy</td></tr>
+      </tbody>
+    </table>
+
+    <h3>📊 reports.db</h3>
+
+    <h4>Table: <code>reports</code></h4>
+    <table>
+      <thead><tr><th>Column</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>claim_id</code></td><td>Reference to the processed claim</td></tr>
+        <tr><td><code>error_code</code></td><td>781 or 935</td></tr>
+        <tr><td><code>provider_id</code></td><td>Provider ID at time of report</td></tr>
+        <tr><td><code>decision</code></td><td>REPROCESS | REJECT | ALREADY_PROCESSED</td></tr>
+        <tr><td><code>reason</code></td><td>LLM-generated explanation of the decision</td></tr>
+        <tr><td><code>created_ts</code></td><td>ISO timestamp when report was created</td></tr>
+      </tbody>
+    </table>
+
+    <h3>📁 Output Files</h3>
+    <p>RCL (Reprocess Claims List) CSV files are generated in <code>output/</code> with filename format <code>RCL_YYYYMMDD_HHMMSS.csv</code>. Each file contains all claims with status <code>READY_FOR_REPROCESS</code> at generation time — this is the file submitted to CMS for resubmission.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 10: SOPs                                      -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <div class="num">10</div>
+      <h2>Standard Operating Procedures (SOPs)</h2>
+    </div>
+
+    <p>The SOPs are plain text files in the <code>sop/</code> directory. The orchestrator loads them at runtime using <code>tool_load_sop(error_code)</code> and passes the text to GPT-4o, which uses it to reason about what actions to take. This means <strong>adding a new SOP file is sufficient to support a new error code</strong> — no code changes needed in the orchestrator.</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1rem;">
+      <div>
+        <h3 style="color:#ffa726">📄 SOP_PDE_781.txt</h3>
+        <pre>SOP – PDE Error Code 781
+-----------------------
+Error: Provider ID missing or invalid
+
+Resolution Steps:
+1. Identify claims with error code 781
+2. Validate Provider ID vs CMS master provider file
+3. If missing → retrieve from RxClaim system
+4. If invalid → correct via CMS provider mapping
+5. Update claim record with corrected Provider ID
+6. Mark claim as READY_FOR_REPROCESS
+7. Include in PDE resubmission flat file
+8. Document correction in audit log
+
+Output:
+- Updated claim record
+- Corrected PDE flat file
+- Claim ready for CMS resubmission</pre>
+      </div>
+      <div>
+        <h3 style="color:#26c6da">📄 SOP_PDE_935.txt</h3>
+        <pre>SOP – PDE Error Code 935
+-----------------------
+Error: Claim already adjudicated
+
+Resolution Steps:
+1. Identify claims with error code 935
+2. Compare Received Date vs Adjudication Timestamp
+3. If adj_ts newer → mark ALREADY_PROCESSED
+4. Do NOT reprocess the claim
+5. Include claim ONLY in reporting output
+6. Exclude from PDE resubmission file
+7. Document decision for audit compliance
+
+Output:
+- Claim excluded from reprocessing
+- Compliance report generated
+- Audit record updated</pre>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:1.2rem">
+      <strong>💡 Extensibility:</strong> To add support for a new CMS error code (e.g. 456), simply create <code>sop/SOP_PDE_456.txt</code> with the resolution steps. The dynamic orchestrator will automatically read it and derive the correct pipeline without any code changes.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 11: FILE STRUCTURE                           -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <div class="num">11</div>
+      <h2>Project File Structure</h2>
+    </div>
+
+    <div class="file-tree">
+      <span class="ft-dir">📁 Multi Agentic POC/</span><br>
+      <span style="margin-left:1.5rem">├── <span class="ft-file">app.py</span> <span class="ft-desc">← Streamlit UI dashboard (Process Claim, Reports, DB Explorer)</span></span><br>
+      <span style="margin-left:1.5rem">├── <span class="ft-file">graph.py</span> <span class="ft-desc">← LangGraph StateGraph (single ORCHESTRATOR node)</span></span><br>
+      <span style="margin-left:1.5rem">├── <span class="ft-file">graph_state.py</span> <span class="ft-desc">← TypedDict ClaimState definition</span></span><br>
+      <span style="margin-left:1.5rem">├── <span class="ft-file">orchestrator_test.py</span> <span class="ft-desc">← End-to-end test: all 4 scenarios</span></span><br>
+      <span style="margin-left:1.5rem">├── <span class="ft-file">requirements.txt</span> <span class="ft-desc">← Python dependencies</span></span><br>
+      <span style="margin-left:1.5rem">├── <span class="ft-file">load_env.py</span> <span class="ft-desc">← .env loader helper</span></span><br>
+      <br>
+      <span style="margin-left:1.5rem">├── <span class="ft-dir">📁 agents/</span> <span class="ft-desc">← All ReAct specialist agents</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">orchestrator.py</span> <span class="ft-desc">← 🧠 Dynamic orchestrator (main controller)</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">rx_claim_agent.py</span> <span class="ft-desc">← 💊 Adjudication specialist (error 781 + 935)</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">report_builder_agent.py</span> <span class="ft-desc">← 📋 Report &amp; RCL file generator</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">servicenow_agent.py</span> <span class="ft-desc">← 🎫 ServiceNow ticket creator</span></span><br>
+      <span style="margin-left:3rem">└── <span class="ft-file">email_agent.py</span> <span class="ft-desc">← 📧 Email notification sender</span></span><br>
+      <br>
+      <span style="margin-left:1.5rem">├── <span class="ft-dir">📁 tools/</span> <span class="ft-desc">← LangChain @tool functions</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">db_tools.py</span> <span class="ft-desc">← All DB tools: get_claim, update_status, provider_mapping, RCL, reports</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">sop_tools.py</span> <span class="ft-desc">← tool_load_sop: reads SOP text files</span></span><br>
+      <span style="margin-left:3rem">└── <span class="ft-file">llm_tools.py</span> <span class="ft-desc">← AzureChatOpenAI LLM instance (shared across all agents)</span></span><br>
+      <br>
+      <span style="margin-left:1.5rem">├── <span class="ft-dir">📁 sop/</span> <span class="ft-desc">← Standard Operating Procedure files</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">SOP_PDE_781.txt</span> <span class="ft-desc">← Error 781 resolution procedure</span></span><br>
+      <span style="margin-left:3rem">└── <span class="ft-file">SOP_PDE_935.txt</span> <span class="ft-desc">← Error 935 resolution procedure</span></span><br>
+      <br>
+      <span style="margin-left:1.5rem">├── <span class="ft-dir">📁 db/</span> <span class="ft-desc">← SQLite databases</span></span><br>
+      <span style="margin-left:3rem">├── <span class="ft-file">rx_claims.db</span> <span class="ft-desc">← Claims table + provider_mapping table</span></span><br>
+      <span style="margin-left:3rem">└── <span class="ft-file">reports.db</span> <span class="ft-desc">← Processed claim reports &amp; audit log</span></span><br>
+      <br>
+      <span style="margin-left:1.5rem">├── <span class="ft-dir">📁 output/</span> <span class="ft-desc">← Generated RCL CSV files (RCL_YYYYMMDD_HHMMSS.csv)</span></span><br>
+      <span style="margin-left:1.5rem">├── <span class="ft-dir">📁 data/</span> <span class="ft-desc">← Source PDE flat file (PDE_flat_file.txt)</span></span><br>
+      <span style="margin-left:1.5rem">└── <span class="ft-dir">📁 venv/</span> <span class="ft-desc">← Python virtual environment</span></span><br>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 12: HOW TO RUN                               -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s12">
+    <div class="section-header">
+      <div class="num">12</div>
+      <h2>How to Run the Project</h2>
+    </div>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Python 3.10+</li>
+      <li>Azure OpenAI resource with GPT-4o deployment</li>
+      <li>Virtual environment activated</li>
+    </ul>
+
+    <h3>1. Set up environment</h3>
+    <pre># Create and activate virtual environment
+python -m venv venv
+venv\Scripts\activate   # Windows
+source venv/bin/activate  # Mac/Linux
+
+# Install dependencies
+pip install -r requirements.txt</pre>
+
+    <h3>2. Configure Azure OpenAI credentials</h3>
+    <pre># Create a .env file in the project root:
+AZURE_OPENAI_API_KEY=your_key_here
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT=gpt-4o
+AZURE_OPENAI_API_VERSION=2024-02-15-preview</pre>
+
+    <h3>3. Initialise databases</h3>
+    <pre># Create tables and seed test data
+python init_rx_claims_db.py
+python init_reports_db.py</pre>
+
+    <h3>4. Run the Streamlit UI</h3>
+    <pre>streamlit run app.py</pre>
+    <p>Opens at <code>http://localhost:8501</code> — use the <strong>🔍 Process Claim</strong> page to select a claim and run the full pipeline with live agent traces.</p>
+
+    <h3>5. Run end-to-end tests</h3>
+    <pre># Run all 4 scenarios and verify dynamic routing
+python orchestrator_test.py</pre>
+
+    <h3>6. Run a single claim programmatically</h3>
+    <pre>from graph import build_graph
+
+app = build_graph()
+result = app.invoke({"claim_id": "C0009", "error_code": "781"})
+
+print(f"Decision       : {result['decision']}")
+print(f"Agents invoked : {result['agents_invoked']}")
+print(f"Reasoning      : {result['reasoning']}")
+print(f"Report         : {result['report']}")
+print(f"ServiceNow     : {result['servicenow_ticket']}")
+print(f"Email status   : {result['email_status']}")</pre>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 13: ReAct PATTERN                            -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section" id="s13">
+    <div class="section-header">
+      <div class="num">13</div>
+      <h2>ReAct Pattern Explained</h2>
+    </div>
+
+    <p><strong>ReAct (Reasoning + Acting)</strong> is the LLM agent pattern used throughout this system. Each agent runs in a loop: it reasons about what to do next, picks a tool, observes the result, then reasons again — until it reaches a final answer.</p>
+
+    <div class="arch-diagram">
+<pre style="background:transparent; border:none; padding:0; color:#7fb3d3; font-size:0.82rem; line-height:2">
+ ┌─────────────────────────────────────────────────────┐
+ │              ReAct Loop (per agent)                 │
+ │                                                     │
+ │  ┌────────────────────────────────────────────────┐ │
+ │  │  1. THOUGHT  (GPT-4o reasons about next step)  │ │
+ │  │     "I need to load the SOP first..."          │ │
+ │  └─────────────────────┬──────────────────────────┘ │
+ │                        │                            │
+ │  ┌─────────────────────▼──────────────────────────┐ │
+ │  │  2. ACTION   (calls a tool)                    │ │
+ │  │     tool_load_sop("781")                       │ │
+ │  └─────────────────────┬──────────────────────────┘ │
+ │                        │                            │
+ │  ┌─────────────────────▼──────────────────────────┐ │
+ │  │  3. OBSERVATION  (tool returns result)         │ │
+ │  │     "SOP for 781: validate provider ID..."     │ │
+ │  └─────────────────────┬──────────────────────────┘ │
+ │                        │                            │
+ │                        └──────────── LOOP ──────────┤
+ │                        (repeat until final answer)  │
+ │                                                     │
+ │  ┌────────────────────────────────────────────────┐ │
+ │  │  4. FINAL ANSWER  (structured JSON response)   │ │
+ │  │     { "next_agent": "DONE", "decision": ... }  │ │
+ │  └────────────────────────────────────────────────┘ │
+ └─────────────────────────────────────────────────────┘
+</pre>
+    </div>
+
+    <h3>Why ReAct for this use case?</h3>
+    <table>
+      <thead><tr><th>Property</th><th>Benefit</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dynamic tool selection</strong></td><td>The LLM decides which tools to call based on context — no hardcoded routing</td></tr>
+        <tr><td><strong>Observable reasoning</strong></td><td>Every thought and tool call is captured in the trace, giving full auditability</td></tr>
+        <tr><td><strong>Error recovery</strong></td><td>If a tool returns an unexpected result, the LLM can adapt its next step</td></tr>
+        <tr><td><strong>SOP compliance</strong></td><td>The LLM reads official SOPs and follows them — easily updated by editing text files</td></tr>
+        <tr><td><strong>Scalability</strong></td><td>New error codes or agents can be added without touching orchestration logic</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Agent Interaction Sequence Diagram</h3>
+    <div class="arch-diagram">
+<pre style="background:transparent; border:none; padding:0; color:#7fb3d3; font-size:0.79rem; line-height:1.9">
+ Caller        Orchestrator       RX Agent      Report Agent    ServiceNow    Email Agent
+   │                │                │               │              │              │
+   │── invoke() ──>│                 │               │              │              │
+   │                │                │               │              │              │
+   │                │─ tool_load_sop()               │              │              │
+   │                │◄─ SOP text ────│               │              │              │
+   │                │                │               │              │              │
+   │                │─ tool_get_claim()              │              │              │
+   │                │◄─ claim data ──│               │              │              │
+   │                │                │               │              │              │
+   │                │─ tool_run_rx_agent() ─────────>│              │              │
+   │                │                │ [ReAct loop]  │              │              │
+   │                │                │◄─ decision ───│              │              │
+   │                │◄── JSON ───────│               │              │              │
+   │                │                │               │              │              │
+   │          [if NOT REJECT]        │               │              │              │
+   │                │─ tool_run_report_agent() ─────────────────>│  │              │
+   │                │                │               │[ReAct loop] │              │
+   │                │                │               │◄──────────── │              │
+   │                │◄─── JSON ──────│               │              │              │
+   │                │                │               │              │              │
+   │          [if REPROCESS]         │               │              │              │
+   │                │─ tool_run_servicenow_agent() ─────────────────────────────>│  │
+   │                │                │               │              │[ReAct loop]  │
+   │                │◄─── JSON ──────│               │              │              │
+   │                │                │               │              │              │
+   │          [if NOT REJECT]        │               │              │              │
+   │                │─ tool_run_email_agent() ────────────────────────────────────────>│
+   │                │                │               │              │          [ReAct] │
+   │                │◄─── JSON ──────│               │              │              │
+   │                │                │               │              │              │
+   │◄── ClaimState─ │                │               │              │              │
+   │   (full result)│                │               │              │              │
+</pre>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>💊 <strong>PDE Claim Processing System</strong> · Dynamic Multi-Agent AI Pipeline</p>
+    <p style="margin-top:0.4rem">Built with LangGraph · LangChain · Azure OpenAI GPT-4o · Streamlit · SQLite</p>
+    <p style="margin-top:0.4rem; color:#2a3f5f">© 2026 Cognizant · March 3, 2026</p>
+  </div>
+
+</div>
+</body>
+</html>
