@@ -191,7 +191,7 @@ def get_db_stats():
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### 💊 PDE Claim System")
+    st.markdown("### 💊 PDE Claim System-")
     st.markdown("---")
     st.markdown("**🤖 Dynamic ReAct Orchestrator**")
     st.markdown("""
