@@ -3,6 +3,8 @@ langchain
 langchain-core
 langchain-openai
 python-dotenv
-langgraph 
+streamlit
+pandas
+python-docx
 
 
